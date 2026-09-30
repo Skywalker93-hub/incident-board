@@ -3,6 +3,12 @@ services:
     image: incident-frontend:latest
     container_name: incident-frontend
     ports:
-      - "8080:80"
+      - 8080:80
     volumes:
       - /Users/kristinadreer/GitHub/incident-board/frontend/index.html:/usr/share/nginx/html/index.html
+  backend:
+    image: incident-backend:latest
+    container_name: incident-backend
+    ports:
+      - 5001:5001
+
