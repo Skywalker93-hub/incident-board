@@ -1,5 +1,36 @@
 <!doctype html>
 <html lang="ru">
-  <head><meta charset="utf-8"><title>Incident Board</title></head>
-  <body><h1>Incident Board</h1></body>
+<head>
+  <meta charset="utf-8">
+  <title>Incident Board</title>
+</head>
+<body>
+  <h1>Incident Board</h1>
+  <ul id="incidents"></ul>
+
+  <script>
+    async function loadIncidents() {
+      const list = document.getElementById("incidents");
+
+      try {
+        const response = await fetch("/api/incidents");
+        if (!response.ok) {
+          throw new Error("Ошибка API");
+        }
+
+        const incidents = await response.json();
+
+        for (const incident of incidents) {
+          const item = document.createElement("li");
+          item.textContent = `${incident.id}: ${incident.title}`;
+          list.appendChild(item);
+        }
+      } catch (error) {
+        list.textContent = "Не удалось загрузить инциденты";
+      }
+    }
+
+    loadIncidents();
+  </script>
+</body>
 </html>
