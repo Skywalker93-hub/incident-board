@@ -24,9 +24,8 @@ jobs:
         run: docker info
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
-          registry: homelabregistry.duckdns.org
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
