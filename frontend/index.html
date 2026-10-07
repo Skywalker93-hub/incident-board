@@ -6,6 +6,13 @@
 </head>
 <body>
   <h1>Incident Board</h1>
+
+  <form id="incident-form">
+    <input id="title" placeholder="Incident name" required>
+    <button type="submit">Create</button>
+  </form>
+  <p id="message"></p>
+
   <ul id="incidents"></ul>
 
   <script>
@@ -15,20 +22,86 @@
       try {
         const response = await fetch("/api/incidents");
         if (!response.ok) {
-          throw new Error("Ошибка API");
+          throw new Error("Error API");
         }
 
         const incidents = await response.json();
+        list.replaceChildren();
 
-        for (const incident of incidents) {
-          const item = document.createElement("li");
-          item.textContent = `${incident.id}: ${incident.title}`;
-          list.appendChild(item);
+for (const incident of incidents) {
+  const item = document.createElement("li");
+  const status = incident.resolved ? "Resolved" : "Open";
+
+  item.textContent = `${incident.id}: ${incident.title} — ${status}`;
+
+  if (!incident.resolved) {
+    const resolveButton = document.createElement("button");
+    resolveButton.textContent = "Resolve";
+
+    resolveButton.addEventListener("click", async () => {
+      resolveButton.disabled = true;
+      message.textContent = "";
+
+      try {
+        const response = await fetch(
+          `/api/incidents/${incident.id}`,
+          { method: "PATCH" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to resolve the incident");
         }
+
+        await loadIncidents();
+      } catch (error) {
+        message.textContent = error.message;
+        resolveButton.disabled = false;
+      }
+    });
+
+    item.append(" ", resolveButton);
+  }
+
+  list.appendChild(item);
+}     
       } catch (error) {
         list.textContent = "Не удалось загрузить инциденты";
       }
     }
+
+    const form = document.getElementById("incident-form");
+    const titleInput = document.getElementById("title");
+    const message = document.getElementById("message");
+    const button = form.querySelector("button");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.textContent = "";
+      button.disabled = true;
+
+      try {
+        const response = await fetch("/api/incidents", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ title: titleInput.value })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Failed to resolve the incident");
+        }
+
+        form.reset();
+        await loadIncidents();
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
 
     loadIncidents();
   </script>
