@@ -1,17 +1,22 @@
+
 # Incident Board
 
 A web application for tracking incidents and their resolution status.
 Users can report incidents, view the incident list, and mark incidents as resolved.
 
-There are three parts: 
+## Components
+
+There are three parts:
+
 **Frontend**: Nginx serves the web page, and its JavaScript sends API requests. Nginx forwards GET, POST, and PATCH requests to the backend.
 
 **Backend**: A Python script using Flask handles requests to list, create, and resolve incidents.
 
-**DataBase**: PostgreSQL stores incidents and their statuses. The backend reads and writes this data.
+**Database**: PostgreSQL stores incidents and their statuses. The backend reads and writes this data.
 
-# Architecture
+## Architecture
 
+```
 User
   |
   v
@@ -24,3 +29,4 @@ Backend (Python + Flask)
   | SQL
   v
 Database (PostgreSQL)
+```
