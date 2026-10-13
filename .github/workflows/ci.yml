@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - master
-      - feature/incident-management
-  pull_request:
-    branches:
-      - master
 
 permissions:
   contents: read
