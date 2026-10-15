@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-backend
+  template:
+    metadata:
+      labels:
+        app: app-backend
+    spec:
+      containers:
+      - name: backend
+        image: kdreer/incident-backend:latest
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+      restartPolicy: Always
+       
