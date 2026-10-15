@@ -16,12 +16,12 @@ spec:
       - name: backend
         image: kdreer/incident-backend:latest
         env:
-        - name: POSTGRES_USER
+        - name: DB_USER
           valueFrom:
             secretKeyRef:
               name: db-secret
               key: DB_USER
-        - name: POSTGRES_PASSWORD
+        - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db-secret
@@ -32,15 +32,9 @@ spec:
               name: db-secret
               key: DB_NAME
         - name: DB_PORT
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: DB_PORT
+          value: "5432"
         - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: DB_HOST
+          value: "db"
       restartPolicy: Always
 ---
 apiVersion: v1

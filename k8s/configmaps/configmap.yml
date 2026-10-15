@@ -6,17 +6,6 @@ data:
   init.sql: |
     CREATE TABLE IF NOT EXISTS incidents (
         id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        title TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS incidents (
-        id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        title TEXT NOT NULL,
-        resolved BOOLEAN NOT NULL DEFAULT FALSE
-    );
-
-    CREATE TABLE IF NOT EXISTS incidents (
-        id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         title TEXT NOT NULL,
         resolved BOOLEAN NOT NULL DEFAULT FALSE
     );
