@@ -7,6 +7,8 @@ from flask import Flask, request
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
+@app.route('/api/incidents')
+
 @app.route('/health')
 def health():
     return 'OK', 200
