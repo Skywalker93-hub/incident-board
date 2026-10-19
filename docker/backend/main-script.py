@@ -7,6 +7,9 @@ from flask import Flask, request
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
+@app.route('/health')
+def health():
+    return 'OK', 200
 
 def connect_db():
     return psycopg.connect(
