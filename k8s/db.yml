@@ -16,16 +16,14 @@ spec:
       - name: postgres
         image: postgres:18
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 5432
           initialDelaySeconds: 10
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 5432
           periodSeconds: 5
         env:

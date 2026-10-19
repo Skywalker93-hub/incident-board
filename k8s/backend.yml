@@ -17,7 +17,7 @@ spec:
         image: kdreer/incident-backend:latest
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 5001
           initialDelaySeconds: 10
           periodSeconds: 5
@@ -25,7 +25,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /
+            path: /incidents
             port: 5001
           periodSeconds: 5
         env:
