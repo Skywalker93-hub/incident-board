@@ -61,3 +61,22 @@ jobs:
             ${{ secrets.DOCKER_USER }}/incident-backend:latest
             ${{ secrets.DOCKER_USER }}/incident-backend:${{ github.sha }}
       
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build_frontend, build_backend]
+
+    steps:
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Deploy new images
+        run: |
+          kubectl set image deployment/app-backend backend=${{ secrets.DOCKER_USER }}/incident-backend:${{ github.sha }}
+          kubectl set image deployment/app-frontend frontend=${{ secrets.DOCKER_USER }}/incident-frontend:${{ github.sha }}
+
+      - name: Verify rollout status
+        run: |
+          kubectl rollout status deployment/app-backend
+          kubectl rollout status deployment/app-frontend
