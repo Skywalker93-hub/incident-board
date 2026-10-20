@@ -7,6 +7,16 @@ from flask import Flask, request
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
+def connect_db():
+    return psycopg.connect(
+        host=os.environ["DB_HOST"],
+        port=os.environ["DB_PORT"],
+        dbname=os.environ["DB_NAME"],
+        user=os.environ["DB_USER"],
+        password=os.environ["DB_PASSWORD"],
+        row_factory=dict_row,
+    )
+
 @app.route('/health')
 def health():
     return 'OK', 200
@@ -21,15 +31,6 @@ def get_incidents():
             )
             return cursor.fetchall()
 
-def connect_db():
-    return psycopg.connect(
-        host=os.environ["DB_HOST"],
-        port=os.environ["DB_PORT"],
-        dbname=os.environ["DB_NAME"],
-        user=os.environ["DB_USER"],
-        password=os.environ["DB_PASSWORD"],
-        row_factory=dict_row,
-    )
 @app.post("/incidents")
 def create_incident():
     data = request.get_json(silent=True)
