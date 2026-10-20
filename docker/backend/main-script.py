@@ -7,11 +7,19 @@ from flask import Flask, request
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
-@app.route('/api/incidents')
-
 @app.route('/health')
 def health():
     return 'OK', 200
+
+@app.get("/incidents")
+@app.get("/api/incidents")
+def get_incidents():
+    with connect_db() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT id, title, resolved FROM incidents ORDER BY id"
+            )
+            return cursor.fetchall()
 
 def connect_db():
     return psycopg.connect(
@@ -22,18 +30,6 @@ def connect_db():
         password=os.environ["DB_PASSWORD"],
         row_factory=dict_row,
     )
-
-
-@app.get("/incidents")
-def get_incidents():
-    with connect_db() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT id, title, resolved FROM incidents ORDER BY id"
-            )
-            return cursor.fetchall()
-
-
 @app.post("/incidents")
 def create_incident():
     data = request.get_json(silent=True)
